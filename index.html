@@ -1280,13 +1280,25 @@ function showCustomAlert(message) {
     }
 
     // ── 4) Parallax effect for hero image ─────────────────────────
-    const heroImg = document.querySelector('.hero-image img');
-    if (heroImg) {
-      window.addEventListener('scroll', () => {
-        const y = window.scrollY * 0.25; // gentle parallax factor
-        heroImg.style.transform = `translateY(${y}px)`;
-      });
-    }
+  document.addEventListener('DOMContentLoaded', () => {
+  const heroBox = document.querySelector('.hero-image');
+  const heroImg = heroBox?.querySelector('img');
+  if (!heroBox || !heroImg) return;
+
+  // dampen and clamp
+  function update() {
+    const rect = heroBox.getBoundingClientRect();
+    const scrolledPastTop = Math.max(0, -rect.top); // px the hero's top is above the viewport
+    const factor = 0.18;                             // smaller = gentler parallax
+    const maxShift = heroBox.offsetHeight * 0.33;    // cap to ~33% of hero height
+    const y = Math.min(maxShift, scrolledPastTop * factor);
+    heroImg.style.transform = `translateY(${y}px)`;
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+});
 
     // ── 5) Close the staff detail panel ────────────────────────────
     const closeBtn = document.getElementById('close-detail');
