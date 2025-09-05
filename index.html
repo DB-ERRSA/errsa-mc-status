@@ -101,7 +101,7 @@ h3 { font-size: var(--fs-lg); }
 
     /* ─── Hero ──────────────────────────────────────────────── */
     header {
-      padding: var(--space-lg) var(--space-md);
+      padding: var(--space-sm) var(--space-sm);
     }
     
   /* Layout and Components */
@@ -605,13 +605,194 @@ h3 { font-size: var(--fs-lg); }
   #builds-slider .slider-window { height: 240px; }
 }
 
+
+/* ── Header bar ───────────────────────────────────────── */
+.site-header{
+  background:#fff;
+  border-bottom:1px solid #eee;
+  box-shadow:0 1px 0 rgba(0,0,0,.03);
+  position:relative;
+  z-index:1000;
+
+}
+
+/* one row, fixed height */
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height:64px;                 /* header height */
+}
+
+/* center the content and give side padding */
+.topbar-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  width:100%;
+  max-width:1200px;            /* match your page width */
+  margin:0 auto;
+  padding:0 24px;              /* left/right gutter */
+}
+
+/* logo block */
+.brand{ display:flex; align-items:center; flex:0 0 auto; }
+.brand img{ display:block; height:40px; width:auto; }
+
+/* nav block */
+.nav{ flex:0 0 auto; }
+.nav ul{
+  display:flex;
+  align-items:center;
+  gap:1.5rem;
+  list-style:none; margin:0; padding:0;
+}
+.nav a{
+  text-decoration:none;
+  color:#444;
+  font-size:.72rem;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+  padding:.25rem 0;
+  position:relative;
+}
+.nav a:hover{ color:#000; }
+.nav a.active{ color:#222; }
+.nav a.active::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:-10px;
+  height:2px; background:#222; opacity:.6;
+}
+
+/* dropdown */
+.has-dropdown{ position:relative; }
+.has-dropdown .dropdown{
+  position:absolute; right:0; top:100%;
+  min-width:220px; background:#fff;
+  border:1px solid #e6e6e6; border-radius:6px;
+  box-shadow:0 8px 18px rgba(0,0,0,.08);
+  padding:.35rem 0; display:none;
+}
+.has-dropdown:hover .dropdown{ display:block; }
+.dropdown li a{ display:block; padding:.6rem .9rem; color:#333; text-transform:none; }
+.dropdown li a:hover{ background:#f6f6f6; }
+
+/* hamburger (mobile) */
+.nav-toggle{
+  display:none; border:none; background:transparent; color:#333;
+  font-size:1.35rem; cursor:pointer; flex:0 0 auto;
+}
+
+@media (max-width:960px){
+  .nav-toggle{ display:block; }
+  .nav{ display:none; position:absolute; top:64px; right:0; width:220px; background:#fff; border:1px solid #eee; }
+  .nav.open{ display:block; }
+  .nav ul{ flex-direction:column; align-items:flex-start; gap:0; padding:.5rem 1rem; }
+  .nav a{ width:100%; padding:.75rem 0; }
+  .has-dropdown .dropdown{ position:static; display:block; border:none; box-shadow:none; padding:0; }
+  .dropdown li a{ padding-left:1rem; }
+}
+
+
+/* ─── Responsive ───────────────────────────── */
+@media (max-width: 960px) {
+  .nav-toggle { display: block; }
+  .nav {
+    display: none;
+    position: absolute;
+    top: 100%; right: 0;
+    width: 220px;
+    background: #fff;
+    border: 1px solid #eee;
+  }
+  .nav.open { display: block; }
+  .nav ul {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.5rem var(--space-md);
+  }
+  .nav a {
+    width: 100%;
+    padding: 0.75rem 0;
+  }
+  .has-dropdown .dropdown {
+    position: static;
+    border: none;
+    box-shadow: none;
+    display: block;
+  }
+  .dropdown li a { padding-left: 1rem; }
+}
+
+
+
+
+
+
+/* keep hero as a grid + prevent H1 margin from collapsing upward */
+.hero {
+  /* DO NOT set display: flow-root here – keep your grid */
+  margin-top: 0 !important;
+  border-top: 1px solid transparent; /* creates a new BFC; no visible change */
+  /* or: overflow: hidden;  (either border-top OR overflow is enough) */
+}
+
+/* --- Fix hero image sitting lower than the text --- */
+.hero { 
+  align-items: start !important;      /* stop vertical centering of grid items */
+  margin-top: 0 !important;
+  border-top: 1px solid transparent;  /* prevents margin-collapsing, invisible */
+}
+
+.hero h1 { margin-top: 0 !important; }
+
+.hero-image { 
+  align-self: start !important;       /* force the image column to the top */
+  height: 60vh;                       /* keep your intended height */
+}
+
+.hero-image img {
+  object-position: center top;        /* anchor the crop to the top */
+  transform: translateY(0) !important;/* neutralize any prior offset */
+}
+
+
   </style>
 </head>
 <body>
 
+ <header class="site-header">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Toggle navigation">☰</button>
+
+      <a class="brand" href="/">
+        <img src="https://raw.githack.com/DB-ERRSA/errsa-mc-status/main/images/errsa-logo-gold.svg" alt="ERRSA" width="160" height="40">
+      </a>
+
+      <nav id="primary-nav" class="nav">
+        <ul>
+          <li><a href="https://campusgroups.erau.edu/errsa/home/">HOME</a></li>
+          <li><a href="https://campusgroups.erau.edu/errsa/get-involved/">GET INVOLVED</a></li>
+          <li><a class="active" href="https://campusgroups.erau.edu/errsa/craft/">MINECRAFT SERVER</a></li>
+          <li><a href="https://campusgroups.erau.edu/errsa/eagle-spotlight/">EAGLE SPOTLIGHT</a></li>
+          <li><a href="https://campusgroups.erau.edu/errsa/swank/">SWANK</a></li>
+          <li class="has-dropdown">
+            <a href="https://campusgroups.erau.edu/errsa/contact-us/">CONTACT US</a>
+            <ul class="dropdown" aria-label="submenu">
+              <li><a href="https://campusgroups.erau.edu/errsa/social-media-2/" target="_blank" rel="noopener">Social Media</a></li>
+              <li><a href="https://campusgroups.erau.edu/errsa/concern-sugestion-form/" target="_blank" rel="noopener">Concern/Suggestion Form</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
 <div id="custom-alert" class="custom-alert hidden">IP copied! Launch Minecraft and press CTRL+L to paste 🔥</div>
 
-  <header>
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-text">
         <h1 id="hero-title">The ERRSA Minecraft Server</h1>
@@ -683,7 +864,7 @@ h3 { font-size: var(--fs-lg); }
 </picture>
 
     </section>
-  </header>
+
 
   <main>
     <!-- Community Builds -->
