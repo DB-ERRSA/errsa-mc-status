@@ -100,13 +100,17 @@ h2 { font-size: var(--fs-xl); }
 h3 { font-size: var(--fs-lg); }
 
 
-/* Hide your chrome when embedded inside CG */
-.is-embedded body { overflow: auto !important; }
-
 
     /* ─── Hero ──────────────────────────────────────────────── */
     header {
       padding: var(--space-sm) var(--space-sm);
+      /* hide your header/footer only when embedded */
+.is-embedded .site-header,
+.is-embedded .site-footer,
+.is-embedded footer { display: none !important; }
+
+/* IMPORTANT: allow the inner page to scroll (so nothing is clipped) */
+.is-embedded body { overflow: auto !important; }
     }
     
   /* Layout and Components */
@@ -1391,14 +1395,12 @@ function showCustomAlert(message) {
 })();
 
 (function () {
-  // Are we in an iframe or forced via ?embed=1
-  const EMBED =
+  const embedded =
     (function(){ try { return top !== self; } catch(e){ return true; } })() ||
     new URLSearchParams(location.search).get('embed') === '1';
+  if (embedded) document.documentElement.classList.add('is-embedded');
+})();
 
-  if (!EMBED) return;
-
-  document.documentElement.classList.add('is-embedded');
 
   // IMPORTANT: let the page size naturally (no overflow:hidden on body)
   // If you previously set `.is-embedded body { overflow: hidden; }`, remove it.
@@ -1422,7 +1424,6 @@ function showCustomAlert(message) {
   for (let i = 0; i < imgs.length; i++) imgs[i].addEventListener('load', sendHeight);
   setInterval(sendHeight, 800);
 })();
-
 
 
 
