@@ -99,6 +99,12 @@ h1 { font-size: var(--fs-3xl); }
 h2 { font-size: var(--fs-xl); }
 h3 { font-size: var(--fs-lg); }
 
+
+/* Hide your chrome when embedded inside CG */
+.is-embedded .site-header,
+.is-embedded footer,
+.is-embedded .site-footer { display: none !important; }
+
     /* ─── Hero ──────────────────────────────────────────────── */
     header {
       padding: var(--space-sm) var(--space-sm);
@@ -1385,7 +1391,43 @@ function showCustomAlert(message) {
   });
 })();
 
+(function () {
+  // Are we in an iframe or forced via ?embed=1
+  const EMBED =
+    (function(){ try { return top !== self; } catch(e){ return true; } })() ||
+    new URLSearchParams(location.search).get('embed') === '1';
 
+  if (!EMBED) return;
+
+  document.documentElement.classList.add('is-embedded');
+
+  // IMPORTANT: let the page size naturally (no overflow:hidden on body)
+  // If you previously set `.is-embedded body { overflow: hidden; }`, remove it.
+
+  function sendHeight() {
+    const h = Math.max(
+      document.documentElement.scrollHeight,
+      document.body ? document.body.scrollHeight : 0
+    );
+    parent.postMessage({ type: 'ERRSA_IFRAME_HEIGHT', height: Math.ceil(h) }, '*');
+  }
+
+  // Keep parent up to date as things load/change
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  new ResizeObserver(sendHeight).observe(document.documentElement);
+  new MutationObserver(sendHeight).observe(document.documentElement, { childList: true, subtree: true, attributes: true });
+
+  // Also ping while images/async content settle
+  const imgs = document.images || [];
+  for (let i = 0; i < imgs.length; i++) imgs[i].addEventListener('load', sendHeight);
+  setInterval(sendHeight, 800);
+})();
+
+
+
+
+  
 </script>
 
 </body>
