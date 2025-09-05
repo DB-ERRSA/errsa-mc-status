@@ -288,24 +288,27 @@ header {
     #builds-slider { padding: var(--space-xl) var(--space-xs); }
     #builds-slider .slider { position: relative; }
 #builds-slider .slider-window {
-  overflow: visible;
+  overflow: hidden;
   height: 320px;
 }
 /* remove UL padding/bullets that push the first slide off-screen */
 #builds-slider .slider-track {
   display: flex;
   list-style: none;
+   align-items: stretch; 
   margin: 0;
   padding: 0;
   transition: transform 0.4s ease;
 }
 
 /* each LI should also have no bullet */
-#builds-slider .slide { list-style: none; }
+#builds-slider .slide {  flex: 0 0 calc(100%/3);
+  padding: var(--space-xs);
+  position: relative; }
 
-/* TEMP: if the reveal observer hasn’t run yet, don’t keep slides hidden */
-#builds-slider .slide { opacity: 1; transform: none; }
-
+@media (max-width: 768px) {
+  #builds-slider .slide { flex: 0 0 100%; }
+}
 }
     .slider-btn {
       position: absolute;
@@ -358,6 +361,7 @@ header {
   width: 100%;
   aspect-ratio: 16 / 9;
   border-radius: 8px;
+  height: 100%;
   overflow: hidden;
   background: #141414;
   border: 1px solid #2a2a2a;
@@ -373,8 +377,12 @@ header {
   outline: none;
 }
 .build-card img {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%; object-fit: cover;
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .build-card .card-overlay {
   position: absolute; inset: 0;
@@ -907,7 +915,13 @@ header {
             data-warp="/warp SammyFarms"
             data-coords="Overworld -780, 69, 2785"
             data-discord="https://discordapp.com/channels/1227818681732698192/1366257936816541828/1412978163063062662">
-      <img src="https://raw.githack.com/DB-ERRSA/errsa-mc-status/main/images/build1.jpg" alt="">
+<img
+  loading="lazy"
+  decoding="async"
+  src="https://db-errsa.github.io/errsa-mc-status/images/build1.jpg"
+  alt="Sammy's Wheat Farm"
+/>
+
       <span class="card-overlay" aria-hidden="true"></span>
       <span class="card-title">Sammy's Wheat Farm — <strong>SammyBammy02</strong></span>
     </button>
@@ -1384,6 +1398,22 @@ header {
   Array.from(document.images).forEach(img => img.addEventListener("load", sendHeight));
   setInterval(sendHeight, 800);
 })();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.build-card img').forEach(img => {
+    const gh = "https://db-errsa.github.io/errsa-mc-status";
+    const cdn = "https://raw.githack.com/DB-ERRSA/errsa-mc-status/main";
+    // if it fails to load from GH pages, try githack; if it fails from githack, try GH pages
+    img.addEventListener('error', () => {
+      if (img.src.startsWith(gh)) {
+        img.src = img.src.replace(gh, cdn);
+      } else if (img.src.startsWith(cdn)) {
+        img.src = img.src.replace(cdn, gh);
+      }
+    });
+  });
+});
 </script>
 
 </body>
