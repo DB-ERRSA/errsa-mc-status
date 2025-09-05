@@ -327,6 +327,80 @@ h3 { font-size: var(--fs-lg); }
   #builds-slider .slide { flex: 0 0 100%; }
   #builds-slider .slider-window { height: 240px; }
 }
+
+
+/* Clickable build cards */
+.build-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.build-card:hover,
+.build-card:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 18px rgba(0,0,0,0.45);
+  border-color: #3a3a3a;
+  outline: none;
+}
+.build-card img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+}
+.build-card .card-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.65) 8%, rgba(0,0,0,0) 55%);
+}
+.build-card .card-title {
+  position: absolute; left: 12px; bottom: 10px;
+  background: rgba(0,0,0,0.55);
+  padding: 6px 10px; border-radius: 6px;
+  font-size: var(--fs-sm); color: var(--text-light);
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+}
+
+/* Build Detail Modal (reuses your visual language) */
+#build-detail {
+  position: fixed; inset: 0; display: grid; place-items: center;
+  background: rgba(0,0,0,0.55); z-index: 110; padding: var(--space-md);
+}
+#build-detail.hidden { display: none; }
+#build-detail .sheet {
+  background: #121212; color: var(--text-light);
+  width: min(960px, 92vw); border-radius: 12px; overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6); position: relative;
+}
+#build-detail .media {
+  width: 100%; max-height: 60vh; object-fit: cover; display: block;
+}
+#build-detail .content {
+  padding: var(--space-md);
+  display: grid; gap: var(--space-sm);
+}
+#build-detail h3 { margin: 0; font-size: var(--fs-xl); }
+#build-detail .meta { opacity: .85; font-size: var(--fs-sm); }
+#build-detail .btn-row {
+  display: flex; flex-wrap: wrap; gap: var(--space-xs);
+}
+#build-detail .btn-ghost, #build-detail .btn-solid {
+  border-radius: 6px; padding: .6rem .9rem; font-size: var(--fs-sm);
+  border: 1px solid #2f2f2f; background: #1a1a1a; color: #fff;
+  text-decoration: none; display: inline-flex; align-items: center; gap: .5rem;
+}
+#build-detail .btn-solid { background: var(--btn-bg); border-color: var(--btn-bg); }
+#build-detail .close-x {
+  position: absolute; top: 8px; right: 10px; border: none; background: transparent;
+  color: #ddd; font-size: 1.5rem; cursor: pointer;
+}
+
+
     /* (…keep the rest of your CSS for Updates, Staff, Ranks here…) */
 
 /* ==== Latest Updates ==== */
@@ -618,18 +692,47 @@ h3 { font-size: var(--fs-lg); }
       <div class="slider" role="region" aria-roledescription="carousel">
         <button class="slider-btn prev" aria-label="Previous build">‹</button>
         <div class="slider-window">
-          <ul class="slider-track">
-            <li class="slide reveal">
-              <img src="https://raw.githack.com/DB-ERRSA/errsa-mc-status/main/images/build1.jpg"
-                   alt="Sammy's Wheat Farm">
-              <p class="caption">Sammy Farms - SammyBammy02</p>
-            </li>
-             
-            <!-- more slides… -->
-          </ul>
+        <ul class="slider-track">
+  <li class="slide reveal">
+    <button class="build-card"
+            type="button"
+            aria-label="Open details for Sammy's Wheat Farm by SammyBammy02"
+            data-title="Sammy's Wheat Farm"
+            data-author="SammyBammy02"
+            data-desc="It's a 2 story farm house with a wrap around porch. I wanted to build something small and cozy to live out my farming days! - SammyBammy02"
+            data-img="https://raw.githack.com/DB-ERRSA/errsa-mc-status/main/images/build1.jpg"
+            data-warp="/warp SammyFarms"
+            data-coords="Overworld -780, 69, 2785"
+            data-discord="https://discordapp.com/channels/1227818681732698192/1366257936816541828/1412978163063062662">
+      <img src="https://raw.githack.com/DB-ERRSA/errsa-mc-status/main/images/build1.jpg" alt="">
+      <span class="card-overlay" aria-hidden="true"></span>
+      <span class="card-title">Sammy's Wheat Farm — <strong>SammyBammy02</strong></span>
+    </button>
+  </li>
+
+  <!-- Duplicate <li>…</li> with new data-* for each build -->
+</ul>
+
         </div>
         <button class="slider-btn next" aria-label="Next build">›</button>
       </div>
+      <aside id="build-detail" class="hidden" role="dialog" aria-modal="true" aria-labelledby="build-title">
+  <div class="sheet">
+    <button class="close-x" aria-label="Close build details">×</button>
+    <img id="build-img" class="media" alt="">
+    <div class="content">
+      <h3 id="build-title"></h3>
+      <div class="meta" id="build-meta"></div>
+      <p id="build-desc"></p>
+      <div class="btn-row">
+        <button class="btn-ghost" id="copy-warp" type="button">Copy /warp</button>
+        <button class="btn-ghost" id="copy-coords" type="button">Copy coords</button>
+        <a class="btn-solid" id="open-discord" href="#" target="_blank" rel="noopener">Open Discord Post</a>
+      </div>
+    </div>
+  </div>
+</aside>
+
     </section>
 
     <!-- Latest Updates -->
@@ -1006,6 +1109,102 @@ function showCustomAlert(message) {
       });
     }
   });
+
+(function(){
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+
+  // Safe copy helper (independent of other code)
+  function copyText(text) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'absolute';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    } catch { return false; }
+  }
+  function toast(msg) {
+    // Reuse your existing alert if present
+    const box = document.getElementById('custom-alert');
+    if (!box) return alert(msg);
+    box.textContent = msg;
+    box.classList.remove('hidden');
+    box.classList.add('show');
+    setTimeout(()=>{ box.classList.remove('show');
+      setTimeout(()=> box.classList.add('hidden'), 300);
+    }, 2500);
+  }
+
+  // Elements
+  const modal = $('#build-detail');
+  const img   = $('#build-img');
+  const title = $('#build-title');
+  const meta  = $('#build-meta');
+  const desc  = $('#build-desc');
+  const copyWarpBtn   = $('#copy-warp');
+  const copyCoordsBtn = $('#copy-coords');
+  const openDiscord   = $('#open-discord');
+
+  let current = { warp: '', coords: '' };
+
+  function openModal(fromBtn) {
+    const t = fromBtn.dataset.title || 'Community Build';
+    const a = fromBtn.dataset.author || 'Unknown';
+    const d = fromBtn.dataset.desc   || '';
+    const i = fromBtn.dataset.img    || '';
+    current.warp   = fromBtn.dataset.warp   || '';
+    current.coords = fromBtn.dataset.coords || '';
+    const dc = fromBtn.dataset.discord || '#';
+
+    img.src = i; img.alt = t + ' preview image';
+    title.textContent = t;
+    meta.textContent  = `by ${a}`;
+    desc.textContent  = d;
+    openDiscord.href  = dc;
+
+    modal.classList.remove('hidden');
+
+    // focus trap: move focus to close button for a11y
+    modal.querySelector('.close-x').focus();
+  }
+  function closeModal() { modal.classList.add('hidden'); }
+
+  // Card click + keyboard open
+  $$('.build-card').forEach(btn => {
+    btn.addEventListener('click', () => openModal(btn));
+    btn.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(btn); }
+    });
+  });
+
+  // Copy buttons
+  copyWarpBtn?.addEventListener('click', () => {
+    if (!current.warp) return toast('No warp set for this build');
+    copyText(current.warp) ? toast('Copied warp to clipboard!') : toast('Copy failed');
+  });
+  copyCoordsBtn?.addEventListener('click', () => {
+    if (!current.coords) return toast('No coords set for this build');
+    copyText(current.coords) ? toast('Copied coords to clipboard!') : toast('Copy failed');
+  });
+
+  // Close interactions
+  modal?.addEventListener('click', (e) => {
+    // click on backdrop closes (but not inside sheet)
+    if (e.target === modal) closeModal();
+  });
+  modal?.querySelector('.close-x')?.addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e) => {
+    if (!modal.classList.contains('hidden') && e.key === 'Escape') closeModal();
+  });
+})();
+
+
 </script>
 
 </body>
