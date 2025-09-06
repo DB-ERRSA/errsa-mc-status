@@ -782,9 +782,14 @@ header {
   height: 60vh;                       /* keep your intended height */
 }
 
-.hero-image img {
-  object-position: center top;        /* anchor the crop to the top */
-  transform: translateY(0) !important;/* neutralize any prior offset */
+.hero-image{ position:relative; overflow:hidden; }
+.hero-image img{
+  display:block;
+  width:100%;
+  height:120%;           /* a bit taller so translate never reveals edges */
+  object-fit:cover;
+  will-change:transform; /* smoother */
+  transform:translateY(0);
 }
 
 
@@ -1240,23 +1245,7 @@ header {
     $$(".slide, .update-item, .staff-card").forEach(el => el.classList.add("reveal"));
   });
 
-  // ---------- Parallax hero (clamped & smooth) ----------
-  document.addEventListener("DOMContentLoaded", () => {
-    const box = $(".hero-image");
-    const img = box?.querySelector("img");
-    if (!box || !img) return;
-
-    function tick() {
-      const r = box.getBoundingClientRect();
-      const past = Math.max(0, -r.top);
-      const factor = 0.18;
-      const maxShift = box.offsetHeight * 0.33;
-      img.style.transform = `translateY(${Math.min(maxShift, past * factor)}px)`;
-    }
-    window.addEventListener("scroll",  tick, { passive: true });
-    window.addEventListener("resize", tick);
-    tick();
-  });
+  
 
   // ---------- Staff detail modal ----------
   document.addEventListener("DOMContentLoaded", () => {
@@ -1469,6 +1458,57 @@ header {
       setInterval(sendHeight, 800);
     }
   });
+})();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Everything we want to reveal on scroll
+  const targets = Array.from(
+    document.querySelectorAll('.reveal, .slide, .update-item, .staff-card')
+  );
+
+  const obs = new IntersectionObserver((entries, o) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        o.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -10% 0px' // reveal a bit earlier
+  });
+
+  targets.forEach(el => {
+    el.classList.add('reveal'); // ensure starting state
+    obs.observe(el);            // and make sure it’s actually observed
+  });
+});
+</script>
+<script>
+/* Simple, old-school parallax: image moves with page scroll */
+(() => {
+  const heroBox = document.querySelector('.hero-image');
+  const heroImg = heroBox?.querySelector('img');
+  if (!heroBox || !heroImg) return;
+
+  // Respect reduced motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const SPEED = 0.30; // 0.25–0.35 feels nice; increase for stronger effect
+
+  function update() {
+    // amount page has scrolled relative to the hero's top
+    const y = (window.scrollY - heroBox.offsetTop) * SPEED;
+    heroImg.style.transform = `translateY(${y}px)`;
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  // if the page content above loads later, keep it in sync
+  new ResizeObserver(update).observe(document.documentElement);
+
+  update();
 })();
 </script>
 
