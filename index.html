@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -118,7 +119,7 @@ header {
     .hero {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: var(--space-lg);
+      gap: var(--space-md);
       align-items: center;
       min-height: 60vh;
     }
@@ -130,7 +131,7 @@ header {
     /* Text column */
 .hero-text {
   /* your original spacing & flex layout */
-  padding-block: var(--space-lg) var(--space-lg);
+  padding-block: var(--space-lg) var(--space-sm);
   padding-inline: var(--space-md);
   display: flex;
   flex-direction: column;
@@ -285,7 +286,7 @@ header {
 
 
     /* ─── Community Builds Slider (excerpt) ─────────────────── */
-    #builds-slider { padding: var(--space-xl) var(--space-xs); }
+    #builds-slider { padding: var(--space-md) var(--space-xs) var(--space-lg); }
     #builds-slider .slider { position: relative; }
 #builds-slider .slider-window {
   overflow: hidden;
