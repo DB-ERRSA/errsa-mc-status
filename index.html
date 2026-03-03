@@ -969,9 +969,21 @@ header {
     <div class="update-item">
       <time datetime="2026-01-31" class="update-date">January 31, 2026 — Update 1.2.0</time>
       <p class="update-message">
-        Added <strong>Shulker Bay</strong> warp for safe overworld shulker access, fixed PVP item drops with automatic unlock on death, and fully overhauled the warp system. 
-        Server now runs across multiple backend servers behind a proxy for improved stability and performance.
-      </p>
+  Added the new <strong>Shulker Bay</strong> warp so shulkers can safely arrive in the overworld without changing spawn protection.
+  Fixed <strong>PVP item drops</strong>—drops now automatically unlock when you’re killed by another player (no more <code>/unlockloot</code>).
+  <br><br>
+  <strong>Warp System Overhaul:</strong>
+  <ul>
+    <li><code>/sethome</code> = <del>$250</del> <strong>$0</strong></li>
+    <li><code>/home</code> = <strong>$0</strong> (<code>/home</code> cooldown: <strong>300s</strong>)</li>
+    <li><code>/setwarp</code> = <strong>$500</strong></li>
+    <li><code>/warp</code> = <del>$50</del> <strong>$0</strong> (<code>/warp</code> cooldown: <strong>300s</strong>)</li>
+    <li>Admin warps remain <strong>free</strong> and now have <strong>no cooldown</strong> (bug fixed)</li>
+    <li>New: <code>/bypassptscooldown</code> = <strong>$15</strong> to skip the 300s cooldown (temporary)</li>
+  </ul>
+  <br>
+  Backend upgrade: the server now runs across multiple backend servers behind a proxy for better stability, performance, and smoother events.
+</p>
     </div>
 
     <!-- 1.1.3 -->
